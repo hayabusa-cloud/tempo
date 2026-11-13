@@ -47,7 +47,7 @@ Go 1.26 ou une version ultérieure est requis. Lancez les tests du paquet avec :
 GOWORK=off go test -timeout 120s -race ./...
 ```
 
-Le [workflow CI](.github/workflows/ci.yml) exécute les vérifications Go et TLA+. Le badge de couverture porte sur le paquet d’exécution à la racine.
+Le [workflow CI](.github/workflows/ci.yml) vérifie Go, TLA+, les preuves Lean et les certificats. Le badge de couverture porte sur le paquet d’exécution à la racine.
 
 La vérification complète nécessite une copie du dépôt incluant `tools/check` et Elan avec une [chaîne d’outils Lean 4.35.x](proofs/lean-version) déjà installée. Lancez `./verify.sh` pour les quatre phases, ou sélectionnez-en une :
 

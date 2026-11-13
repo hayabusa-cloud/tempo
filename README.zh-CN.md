@@ -47,7 +47,7 @@ observation := state.Observe()
 GOWORK=off go test -timeout 120s -race ./...
 ```
 
-[CI 工作流](.github/workflows/ci.yml) 执行 Go 和 TLA+ 检查。覆盖率徽章衡量根目录运行时包的测试覆盖率。
+[CI 工作流](.github/workflows/ci.yml) 执行 Go、TLA+、Lean 证明和证书检查。覆盖率徽章衡量根目录运行时包的测试覆盖率。
 
 完整验证需要包含 `tools/check` 的仓库副本、Elan 以及其中已安装的 [Lean 4.35.x 工具链](proofs/lean-version)。运行 `./verify.sh` 执行全部四个阶段，也可以单独选择：
 

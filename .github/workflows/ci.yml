@@ -22,7 +22,7 @@ env:
 
 jobs:
   verify:
-    name: Go and TLA+
+    name: Go, TLA+, and Lean
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -44,6 +44,31 @@ jobs:
 
       - name: Check TLA+ models
         run: ./verify.sh tla
+
+      - name: Install Lean
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          series=$(cat proofs/lean-version)
+          toolchain=$(gh api --paginate 'repos/leanprover/lean4/releases?per_page=100' \
+            --jq '.[] | select(.draft == false and .prerelease == false) | .tag_name' |
+            awk -v prefix="v${series%.x}." '
+              index($0, prefix) == 1 && substr($0, length(prefix) + 1) ~ /^[0-9]+$/ { print }
+            ' | sort -V | tail -n 1)
+          if [ -z "$toolchain" ]; then
+            printf 'No stable Lean %s release found.\n' "$series" >&2
+            exit 1
+          fi
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y \
+            --default-toolchain none --no-modify-path
+          "$HOME/.elan/bin/elan" toolchain install "leanprover/lean4:$toolchain"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Check Lean proofs and certificates
+        run: ./verify.sh certificates
 
       - name: Collect runtime coverage
         run: go test -buildvcs=false -tags=tempo_verify -timeout 120s -race -covermode=atomic -coverprofile=coverage.out ./...

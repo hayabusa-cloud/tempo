@@ -47,7 +47,7 @@ Requires Go 1.26+. Run the package tests with:
 GOWORK=off go test -timeout 120s -race ./...
 ```
 
-The [CI workflow](.github/workflows/ci.yml) runs the Go and TLA+ checks. The coverage badge measures the root runtime package.
+The [CI workflow](.github/workflows/ci.yml) runs the Go, TLA+, Lean proof, and certificate checks. The coverage badge measures the root runtime package.
 
 Full verification requires a repository checkout including `tools/check` and Elan with an installed [Lean 4.35.x toolchain](proofs/lean-version). Run `./verify.sh` for all four phases, or select one:
 

@@ -47,7 +47,7 @@ Go 1.26 以降が必要です。パッケージのテストは次のコマンド
 GOWORK=off go test -timeout 120s -race ./...
 ```
 
-[CI ワークフロー](.github/workflows/ci.yml) は Go と TLA+ の検査を実行します。カバレッジバッジは、ルートのランタイムパッケージを対象とします。
+[CI ワークフロー](.github/workflows/ci.yml) は Go、TLA+、Lean の証明、および証明書の検査を実行します。カバレッジバッジは、ルートのランタイムパッケージを対象とします。
 
 完全な検証には、`tools/check` を含むリポジトリのコピー、Elan、および Elan にインストール済みの [Lean 4.35.x ツールチェーン](proofs/lean-version) が必要です。`./verify.sh` で全四段階を実行するか、個別に選択します。
 
