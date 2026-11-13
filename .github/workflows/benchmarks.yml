@@ -1,0 +1,96 @@
+name: Benchmarks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: benchmarks-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GOWORK: 'off'
+  GOTOOLCHAIN: local
+  GOPROXY: 'off'
+  GOSUMDB: 'off'
+  GOMAXPROCS: '1'
+
+jobs:
+  benchmarks:
+    name: Benchmarks (Go 1.26.x)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.26.x'
+          check-latest: true
+          cache: false
+
+      - name: Run benchmarks
+        run: |
+          report_dir="${RUNNER_TEMP}/tempo-benchmarks"
+          mkdir -p "$report_dir"
+          {
+            go version
+            go env GOOS GOARCH GOAMD64 GOARM64 CGO_ENABLED GOFLAGS
+            uname -a
+            printf 'Runner image: %s %s\n' "${ImageOS:-unknown}" "${ImageVersion:-unknown}"
+            printf 'Parameters: -benchmem -benchtime=100ms -count=10 -cpu=1; GOMAXPROCS=1\n'
+          } | tee "$report_dir/environment.txt"
+          go test -timeout 120s -run '^$' -bench '^Benchmark(Direct|Product)$' -benchmem -benchtime=100ms -count=10 -cpu=1 . 2>&1 | tee "$report_dir/raw.txt"
+
+      - name: Check complete samples
+        run: |
+          for benchmark in BenchmarkDirect BenchmarkProduct; do
+            samples=$(awk -v expected="$benchmark" '
+              $2 ~ /^[0-9]+$/ && / ns\/op/ && / B\/op/ && / allocs\/op/ {
+                name=$1
+                sub(/-[0-9]+$/, "", name)
+                if (name == expected) count++
+              }
+              END { print count+0 }
+            ' "${RUNNER_TEMP}/tempo-benchmarks/raw.txt")
+            if [ "$samples" -ne 10 ]; then
+              printf '::error::%s: found %s complete samples, want 10\n' "$benchmark" "$samples"
+              exit 1
+            fi
+          done
+
+      - name: Summarize benchmarks
+        if: always()
+        run: |
+          report_dir="${RUNNER_TEMP}/tempo-benchmarks"
+          if [ -d "$report_dir" ]; then
+            {
+              printf '### Tempo benchmarks\n\n'
+              printf 'Direct and composed workloads; collection status does not establish a performance threshold.\n\n'
+              printf '```text\n'
+              cat "$report_dir/environment.txt"
+              cat "$report_dir/raw.txt"
+              printf '```\n'
+            } | tee "$report_dir/summary.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Save benchmark results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: tempo-benchmark-results
+          path: ${{ runner.temp }}/tempo-benchmarks/
+          if-no-files-found: error
+          retention-days: 7
