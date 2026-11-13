@@ -211,7 +211,7 @@ func reserved(s string) bool {
 	switch s {
 	case "TRUE", "FALSE", "BOOLEAN", "String", "MODULE", "EXTENDS", "CONSTANT", "CONSTANTS", "VARIABLE", "VARIABLES", "ASSUME", "ASSUMPTION", "AXIOM", "THEOREM", "INSTANCE", "LOCAL", "RECURSIVE", "WITH", "IF", "THEN", "ELSE", "CASE", "OTHER", "LET", "IN", "EXCEPT", "UNCHANGED", "ENABLED", "CHOOSE", "DOMAIN", "SUBSET", "UNION":
 		return true
-	case "ACTION", "LAMBDA", "STATE", "TEMPORAL", "NEW", "PROPOSITION", "LEMMA", "COROLLARY", "PROOF", "PROVE", "BY", "ONLY", "DEFINE", "DEF", "DEFS", "USE", "HIDE", "HAVE", "OBVIOUS", "OMITTED", "TAKE", "QED", "PICK", "WITNESS", "SUFFICES":
+	case "ACTION", "ACTIONS", "LAMBDA", "STATE", "TEMPORAL", "TEMPORALS", "NEW", "PROPOSITION", "LEMMA", "COROLLARY", "PROOF", "PROVE", "BY", "ONLY", "DEFINE", "DEF", "DEFS", "USE", "HIDE", "HAVE", "OBVIOUS", "OMITTED", "TAKE", "QED", "PICK", "WITNESS", "SUFFICES":
 		return true
 	}
 	return strings.HasPrefix(s, "WF_") || strings.HasPrefix(s, "SF_")

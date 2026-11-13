@@ -152,6 +152,12 @@ Init == x = 0
 Next == UNCHANGED x
 Spec == Init /\ [][Next]_vars
 P == x \inNumbers`, "INVARIANT P", "ok"},
+		{"keyword prefixes remain names", `ACTIONSReady == TRUE
+TEMPORALSReady == TRUE
+Init == x = 0
+Next == UNCHANGED x
+Spec == Init /\ [][Next]_vars
+P == ACTIONSReady /\ TEMPORALSReady`, "INVARIANT P", "ok"},
 		{"separated minus tokens", `Init == x = 0
 Next == UNCHANGED x
 Spec == Init /\ [][Next]_vars
@@ -313,6 +319,8 @@ P == TRUE`
 		{"empty argument list", "P == TRUE", "P == Init()"},
 		{"reserved declaration", "P == TRUE", "AXIOM == TRUE\nP == TRUE"},
 		{"reserved proof word", "P == TRUE", "PROOF == TRUE\nP == TRUE"},
+		{"reserved action alias", "P == TRUE", "ACTIONS == TRUE\nP == TRUE"},
+		{"reserved temporal alias", "P == TRUE", "TEMPORALS == TRUE\nP == TRUE"},
 		{"identifier without a letter", "P == TRUE", "___ == TRUE\nP == TRUE"},
 		{"predefined String", "P == TRUE", "String == TRUE\nP == TRUE"},
 		{"unused unknown operator", "P == TRUE", "Unused == Missing\nP == TRUE"},
