@@ -33,6 +33,7 @@ go.work.sum
 
 # Lean build artifacts
 /proofs/.lake/
+/proofs/lake-manifest.json
 
 # TLA+ model-checking artifacts
 /spec/states/

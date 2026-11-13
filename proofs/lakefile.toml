@@ -1,0 +1,11 @@
+name = "tempo"
+defaultTargets = ["Tempo", "Audit"]
+
+[leanOptions]
+warningAsError = true
+
+[[lean_lib]]
+name = "Tempo"
+
+[[lean_lib]]
+name = "Audit"
