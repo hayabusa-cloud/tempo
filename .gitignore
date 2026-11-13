@@ -30,3 +30,11 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Lean build artifacts
+/proofs/.lake/
+
+# TLA+ model-checking artifacts
+/spec/states/
+/spec/*_TTrace_*.tla
+/spec/*_TTrace_*.bin
