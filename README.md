@@ -1,7 +1,6 @@
 # tempo
 
 [![Go Reference](https://pkg.go.dev/badge/code.hybscloud.com/tempo.svg)](https://pkg.go.dev/code.hybscloud.com/tempo)
-[![Go Report Card](https://goreportcard.com/badge/github.com/hayabusa-cloud/tempo)](https://goreportcard.com/report/github.com/hayabusa-cloud/tempo)
 [![Codecov](https://codecov.io/gh/hayabusa-cloud/tempo/graph/badge.svg)](https://codecov.io/gh/hayabusa-cloud/tempo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Benchmarks](https://github.com/hayabusa-cloud/tempo/actions/workflows/benchmarks.yml/badge.svg)](https://github.com/hayabusa-cloud/tempo/actions/workflows/benchmarks.yml)
@@ -35,7 +34,7 @@ Events supply time and other external facts. Implementations define admission, r
 
 ## Integration
 
-Use existing stack types in the consuming package's event and observation types. Preserve `iox` outcomes, `kont` resumption ownership, `cove` context, `sess` protocol frontiers, and `takt`/`urex` correlation and physical lifetimes. The core needs no adapter packages or dependencies on those owners.
+Use existing stack types in the consuming package's event and observation types. Preserve `iox` outcomes, `kont` resumption ownership, `cove` context, `sess` protocol frontiers, and `takt` correlation and physical lifetimes. The core needs no adapter packages or dependencies on those owners.
 
 Independent pure states compose pointwise. Shared-state interactions require their own joint transition. Go types do not enforce purity, and copying a residual never transfers an endpoint, continuation, or buffer obligation.
 

@@ -1,7 +1,6 @@
 # tempo
 
 [![Go Reference](https://pkg.go.dev/badge/code.hybscloud.com/tempo.svg)](https://pkg.go.dev/code.hybscloud.com/tempo)
-[![Go Report Card](https://goreportcard.com/badge/github.com/hayabusa-cloud/tempo)](https://goreportcard.com/report/github.com/hayabusa-cloud/tempo)
 [![Codecov](https://codecov.io/gh/hayabusa-cloud/tempo/graph/badge.svg)](https://codecov.io/gh/hayabusa-cloud/tempo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Benchmarks](https://github.com/hayabusa-cloud/tempo/actions/workflows/benchmarks.yml/badge.svg)](https://github.com/hayabusa-cloud/tempo/actions/workflows/benchmarks.yml)
@@ -35,7 +34,7 @@ observation := state.Observe()
 
 ## 集成
 
-在使用方包的事件与观察类型中复用技术栈现有类型。保留 `iox` 的结果语义、`kont` 的续延恢复所有权、`cove` 的上下文、`sess` 的协议进展状态，以及 `takt`/`urex` 的关联信息和物理生命周期。核心不需要适配器包，也不依赖这些职责的所属包。
+在使用方包的事件与观察类型中复用技术栈现有类型。保留 `iox` 的结果语义、`kont` 的续延恢复所有权、`cove` 的上下文、`sess` 的协议进展状态，以及 `takt` 的关联信息和物理生命周期。核心不需要适配器包，也不依赖这些职责的所属包。
 
 相互独立的纯状态逐分量组合。涉及共享状态的交互需要单独定义联合转换。Go 类型无法强制保证纯性，复制残余状态也不会转移端点、续延或缓冲区的责任。
 

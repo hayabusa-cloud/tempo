@@ -1,7 +1,6 @@
 # tempo
 
 [![Go Reference](https://pkg.go.dev/badge/code.hybscloud.com/tempo.svg)](https://pkg.go.dev/code.hybscloud.com/tempo)
-[![Go Report Card](https://goreportcard.com/badge/github.com/hayabusa-cloud/tempo)](https://goreportcard.com/report/github.com/hayabusa-cloud/tempo)
 [![Codecov](https://codecov.io/gh/hayabusa-cloud/tempo/graph/badge.svg)](https://codecov.io/gh/hayabusa-cloud/tempo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Benchmarks](https://github.com/hayabusa-cloud/tempo/actions/workflows/benchmarks.yml/badge.svg)](https://github.com/hayabusa-cloud/tempo/actions/workflows/benchmarks.yml)
@@ -35,7 +34,7 @@ observation := state.Observe()
 
 ## 統合
 
-利用側パッケージのイベント型と観測型には、スタックの既存の型を使います。`iox` の結果、`kont` の再開継続の所有権、`cove` のコンテキスト、`sess` のプロトコル進行状態、`takt`/`urex` の対応付けと物理リソースの生存期間を保持してください。コアにはアダプターパッケージも、これらの責務を持つパッケージへの依存も不要です。
+利用側パッケージのイベント型と観測型には、スタックの既存の型を使います。`iox` の結果、`kont` の再開継続の所有権、`cove` のコンテキスト、`sess` のプロトコル進行状態、`takt` の対応付けと物理リソースの生存期間を保持してください。コアにはアダプターパッケージも、これらの責務を持つパッケージへの依存も不要です。
 
 独立した純粋な状態は、各構成要素ごとに合成します。共有状態を介する相互作用には、専用の結合遷移が必要です。Go の型は純粋性を保証しません。また、残余状態をコピーしても、エンドポイント、継続、バッファーに関する責務は移転しません。
 

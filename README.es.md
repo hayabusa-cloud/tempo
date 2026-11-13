@@ -1,7 +1,6 @@
 # tempo
 
 [![Go Reference](https://pkg.go.dev/badge/code.hybscloud.com/tempo.svg)](https://pkg.go.dev/code.hybscloud.com/tempo)
-[![Go Report Card](https://goreportcard.com/badge/github.com/hayabusa-cloud/tempo)](https://goreportcard.com/report/github.com/hayabusa-cloud/tempo)
 [![Codecov](https://codecov.io/gh/hayabusa-cloud/tempo/graph/badge.svg)](https://codecov.io/gh/hayabusa-cloud/tempo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Benchmarks](https://github.com/hayabusa-cloud/tempo/actions/workflows/benchmarks.yml/badge.svg)](https://github.com/hayabusa-cloud/tempo/actions/workflows/benchmarks.yml)
@@ -35,7 +34,7 @@ Los eventos aportan el tiempo y otros hechos externos. Cada implementación defi
 
 ## Integración
 
-Reutilice los tipos existentes de la pila en los tipos de eventos y observaciones del paquete consumidor. Preserve los resultados de `iox`, la propiedad de las reanudaciones de `kont`, el contexto de `cove`, los estados de avance del protocolo de `sess` y la correlación y los ciclos de vida físicos de `takt`/`urex`. El núcleo no necesita paquetes adaptadores ni dependencias de los paquetes responsables de esas funciones.
+Reutilice los tipos existentes de la pila en los tipos de eventos y observaciones del paquete consumidor. Preserve los resultados de `iox`, la propiedad de las reanudaciones de `kont`, el contexto de `cove`, los estados de avance del protocolo de `sess` y la correlación y los ciclos de vida físicos de `takt`. El núcleo no necesita paquetes adaptadores ni dependencias de los paquetes responsables de esas funciones.
 
 Los estados puros independientes se componen punto a punto. Las interacciones con estado compartido requieren su propia transición conjunta. Los tipos de Go no garantizan la pureza, y copiar un estado residual nunca transfiere obligaciones sobre un extremo de comunicación, una continuación o un búfer.
 
