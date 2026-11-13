@@ -40,5 +40,10 @@ func (p Product[L, R, E, A, B]) Parts() (L, R) {
 // Each component interprets e under its own contract, including explicit
 // self-loops for unrelated events and modeled rejection for invalid events.
 func (p Product[L, R, E, A, B]) Step(e E) Product[L, R, E, A, B] {
-	return Both(p.left.Step(e), p.right.Step(e))
+	p.left = step(p.left, e, L.Step)
+	p.right = step(p.right, e, R.Step)
+	return p
 }
+
+// step exposes component application to inlining without storing a callback.
+func step[R, E any](r R, e E, next func(R, E) R) R { return next(r, e) }

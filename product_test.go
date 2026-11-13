@@ -21,6 +21,41 @@ func (p parity) Observe() uint64      { return uint64(p) }
 func (p parity) Step(e uint64) parity { return p ^ parity(e) }
 
 var result tempo.Pair[uint64, uint64]
+var nestedResult tempo.Pair[tempo.Pair[uint64, uint64], uint64]
+var lifetimeResult tempo.Pair[request, loan]
+var lifetimeTrace = [...]event{tick, move, cancel, returnLoan, complete, settle, returnLoan, invalid}
+
+type pointerSum uint64
+
+func (s pointerSum) Observe() uint64 { return uint64(s) }
+func (s pointerSum) Step(e *uint64) pointerSum {
+	if e == nil {
+		return s
+	}
+	return s + pointerSum(*e)
+}
+
+type pointerParity uint64
+
+func (p pointerParity) Observe() uint64 { return uint64(p) }
+func (p pointerParity) Step(e *uint64) pointerParity {
+	if e == nil {
+		return p
+	}
+	return p ^ pointerParity(*e)
+}
+
+type pointerProduct = tempo.Product[pointerSum, pointerParity, *uint64, uint64, uint64]
+
+func stepPointerProduct(p pointerProduct, e *uint64) pointerProduct {
+	left, right := p.Parts()
+	return tempo.Both(left.Step(e), right.Step(e))
+}
+
+func observePointerProduct(p pointerProduct) tempo.Pair[uint64, uint64] {
+	left, right := p.Parts()
+	return tempo.Pair[uint64, uint64]{Left: left.Observe(), Right: right.Observe()}
+}
 
 func TestProductHistory(t *testing.T) {
 	initial := tempo.Both(sum(7), parity(3))
@@ -124,6 +159,52 @@ func TestProductAllocations(t *testing.T) {
 	if allocs != 0 {
 		t.Fatalf("%g allocations/run", allocs)
 	}
+	if n := testing.AllocsPerRun(1000, func() {
+		p := tempo.Both(tempo.Both(sum(0), parity(0)), sum(0))
+		for i := range uint64(100) {
+			p = p.Step(i)
+			nestedResult = p.Observe()
+		}
+	}); n != 0 {
+		t.Fatalf("nested product: %g allocations/run", n)
+	}
+	if n := testing.AllocsPerRun(1000, func() {
+		p := tempo.Both(request{Origin: origin, Deadline: deadline}, loan{})
+		for _, e := range lifetimeTrace {
+			p = p.Step(e)
+			lifetimeResult = p.Observe()
+		}
+	}); n != 0 {
+		t.Fatalf("lifetime product: %g allocations/run", n)
+	}
+}
+
+func TestConcretePointerProduct(t *testing.T) {
+	p := tempo.Both(pointerSum(7), pointerParity(3))
+	reference := p
+	a, b := uint64(7), uint64(3)
+	for i := range uint64(1000) {
+		value := i ^ (^uint64(0) >> (i % 64))
+		e := &value
+		if i%5 == 0 {
+			e = nil
+		} else {
+			a, b = a+value, b^value
+		}
+		p, reference = stepPointerProduct(p, e), reference.Step(e)
+		if p != reference || observePointerProduct(p) != (tempo.Pair[uint64, uint64]{Left: a, Right: b}) {
+			t.Fatalf("concrete transition differs at event %d", i)
+		}
+	}
+	if n := testing.AllocsPerRun(1000, func() {
+		p := tempo.Both(pointerSum(0), pointerParity(0))
+		for i := range uint64(100) {
+			p = stepPointerProduct(p, &i)
+			result = observePointerProduct(p)
+		}
+	}); n != 0 {
+		t.Fatalf("concrete pointer product: %g allocations/run", n)
+	}
 }
 
 func FuzzProduct(f *testing.F) {
@@ -159,5 +240,76 @@ func BenchmarkDirect(b *testing.B) {
 		a++
 		c ^= 1
 		result = tempo.Pair[uint64, uint64]{Left: a, Right: c}
+	}
+}
+
+func BenchmarkNestedProduct(b *testing.B) {
+	p := tempo.Both(tempo.Both(sum(0), parity(0)), sum(0))
+	b.ReportAllocs()
+	for b.Loop() {
+		p = p.Step(1)
+		nestedResult = p.Observe()
+	}
+}
+
+func BenchmarkNestedDirect(b *testing.B) {
+	var a, c, d uint64
+	b.ReportAllocs()
+	for b.Loop() {
+		a, c, d = a+1, c^1, d+1
+		nestedResult = tempo.Pair[tempo.Pair[uint64, uint64], uint64]{Left: tempo.Pair[uint64, uint64]{Left: a, Right: c}, Right: d}
+	}
+}
+
+func BenchmarkLifetimeProduct(b *testing.B) {
+	b.ReportAllocs()
+	for b.Loop() {
+		p := tempo.Both(request{Origin: origin, Deadline: deadline}, loan{})
+		for _, e := range lifetimeTrace {
+			p = p.Step(e)
+			lifetimeResult = p.Observe()
+		}
+	}
+}
+
+func BenchmarkLifetimeDirect(b *testing.B) {
+	b.ReportAllocs()
+	for b.Loop() {
+		app, resource := request{Origin: origin, Deadline: deadline}, (loan{})
+		for _, e := range lifetimeTrace {
+			app, resource = app.Step(e), resource.Step(e)
+			lifetimeResult = tempo.Pair[request, loan]{Left: app.Observe(), Right: resource.Observe()}
+		}
+	}
+}
+
+func BenchmarkPointerProduct(b *testing.B) {
+	p := tempo.Both(pointerSum(0), pointerParity(0))
+	b.ReportAllocs()
+	for b.Loop() {
+		e := uint64(1)
+		p = p.Step(&e)
+		result = p.Observe()
+	}
+}
+
+func BenchmarkPointerConcrete(b *testing.B) {
+	p := tempo.Both(pointerSum(0), pointerParity(0))
+	b.ReportAllocs()
+	for b.Loop() {
+		e := uint64(1)
+		p = stepPointerProduct(p, &e)
+		result = observePointerProduct(p)
+	}
+}
+
+func BenchmarkPointerDirect(b *testing.B) {
+	var a pointerSum
+	var c pointerParity
+	b.ReportAllocs()
+	for b.Loop() {
+		e := uint64(1)
+		a, c = a.Step(&e), c.Step(&e)
+		result = tempo.Pair[uint64, uint64]{Left: a.Observe(), Right: c.Observe()}
 	}
 }

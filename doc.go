@@ -16,5 +16,7 @@
 //
 // Generic composition introduces no dynamic storage of its own. Implementations
 // determine allocation, copying, and concurrency safety; generic method dispatch
-// may remain in compiled code.
+// may remain in compiled code and cause pointer-bearing events to escape. Known
+// compositions can use [Product.Parts] and concrete component methods in a hot
+// loop, reconstructing with [Both] when a product is needed again.
 package tempo

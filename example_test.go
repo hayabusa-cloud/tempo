@@ -96,3 +96,15 @@ func ExampleBoth() {
 	// true false
 	// true true
 }
+
+func ExampleProduct_Parts() {
+	r := tempo.Both(request{Origin: origin, Deadline: deadline}, loan{})
+	app, resource := r.Parts()
+	for _, e := range []event{cancel, complete, settle, returnLoan} {
+		app, resource = app.Step(e), resource.Step(e)
+	}
+	r = tempo.Both(app, resource)
+	o := r.Observe()
+	fmt.Println(o.Left.Complete, o.Right.Settled, o.Right.Returned)
+	// Output: true true true
+}
