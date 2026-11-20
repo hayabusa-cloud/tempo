@@ -40,7 +40,7 @@ Los estados puros independientes se componen punto a punto. Las interacciones co
 
 ## Verificación
 
-Requiere Go 1.26 o posterior. Ejecute las pruebas del paquete con:
+Requiere Go 1.27 o posterior. Ejecute las pruebas del paquete con:
 
 ```sh
 GOWORK=off go test -timeout 120s -race ./...

@@ -40,7 +40,7 @@ observation := state.Observe()
 
 ## 検証
 
-Go 1.26 以降が必要です。パッケージのテストは次のコマンドで実行します。
+Go 1.27 以降が必要です。パッケージのテストは次のコマンドで実行します。
 
 ```sh
 GOWORK=off go test -timeout 120s -race ./...

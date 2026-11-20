@@ -40,7 +40,7 @@ Independent pure states compose pointwise. Shared-state interactions require the
 
 ## Verification
 
-Requires Go 1.26+. Run the package tests with:
+Requires Go 1.27+. Run the package tests with:
 
 ```sh
 GOWORK=off go test -timeout 120s -race ./...

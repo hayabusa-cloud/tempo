@@ -40,7 +40,7 @@ Les états purs indépendants se composent point par point. Les interactions sur
 
 ## Vérification
 
-Go 1.26 ou une version ultérieure est requis. Lancez les tests du paquet avec :
+Go 1.27 ou une version ultérieure est requis. Lancez les tests du paquet avec :
 
 ```sh
 GOWORK=off go test -timeout 120s -race ./...

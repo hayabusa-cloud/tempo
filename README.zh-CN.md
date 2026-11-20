@@ -40,7 +40,7 @@ observation := state.Observe()
 
 ## 验证
 
-需要 Go 1.26 或更新版本。运行包测试：
+需要 Go 1.27 或更新版本。运行包测试：
 
 ```sh
 GOWORK=off go test -timeout 120s -race ./...
