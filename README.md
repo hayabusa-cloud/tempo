@@ -34,7 +34,7 @@ Events supply time and other external facts. Implementations define admission, r
 
 ## Integration
 
-Use existing stack types in the consuming package's event and observation types. Preserve `iox` outcomes, `kont` resumption ownership, `cove` context, `sess` protocol frontiers, and `takt` correlation and physical lifetimes. The core needs no adapter packages or dependencies on those owners.
+Use existing stack types in the consuming package's event and observation types. Preserve `iox` outcomes, `kont` resumption ownership, `cove` context, and `sess` protocol frontiers. `takt` matches completions to submitted operations. The native I/O binding determines when its buffers and other resources can be released. The core needs no adapter packages or dependencies on those owners.
 
 Independent pure states compose pointwise. Shared-state interactions require their own joint transition. Go types do not enforce purity, and copying a residual never transfers an endpoint, continuation, or buffer obligation.
 

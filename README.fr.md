@@ -34,7 +34,7 @@ Les événements apportent le temps et les autres faits externes. Chaque implém
 
 ## Intégration
 
-Réutilisez les types existants de la pile dans les types d’événements et d’observations du paquet consommateur. Préservez les résultats d’`iox`, la propriété des continuations de reprise de `kont`, le contexte de `cove`, les états d’avancement du protocole de `sess`, ainsi que la corrélation et les durées de vie physiques de `takt`. Le noyau n’a besoin ni de paquets adaptateurs ni de dépendances envers les paquets responsables de ces fonctions.
+Réutilisez les types existants de la pile dans les types d’événements et d’observations du paquet consommateur. Préservez les résultats d’`iox`, la propriété des continuations de reprise de `kont`, le contexte de `cove` et les états d’avancement du protocole de `sess`. `takt` associe les notifications de fin d’E/S aux opérations soumises. La couche d’E/S native détermine quand elle peut libérer ses tampons et ses autres ressources. Le noyau n’a besoin ni de paquets adaptateurs ni de dépendances envers les paquets responsables de ces fonctions.
 
 Les états purs indépendants se composent point par point. Les interactions sur un état partagé nécessitent leur propre transition conjointe. Les types Go ne garantissent pas la pureté, et copier un état résiduel ne transfère jamais les obligations liées à une extrémité de communication, une continuation ou un tampon.
 
