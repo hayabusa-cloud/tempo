@@ -34,13 +34,13 @@ Los eventos aportan el tiempo y otros hechos externos. Cada implementación defi
 
 ## Integración
 
-Reutilice los tipos existentes de la pila en los tipos de eventos y observaciones del paquete consumidor. Preserve los resultados de `iox`, la propiedad de las reanudaciones de `kont`, el contexto de `cove`, los estados de avance del protocolo de `sess` y la correlación y los ciclos de vida físicos de `takt`. El núcleo no necesita paquetes adaptadores ni dependencias de los paquetes responsables de esas funciones.
+Reutilice los tipos existentes de la pila en los tipos de eventos y observaciones del paquete consumidor. Preserve los resultados de `iox`, la propiedad de las reanudaciones de `kont`, el contexto de `cove` y los estados de avance del protocolo de `sess`. `takt` asocia las notificaciones de finalización con las operaciones enviadas. La capa de E/S nativa determina cuándo puede liberar sus búferes y demás recursos. El núcleo no necesita paquetes adaptadores ni dependencias de los paquetes responsables de esas funciones.
 
 Los estados puros independientes se componen punto a punto. Las interacciones con estado compartido requieren su propia transición conjunta. Los tipos de Go no garantizan la pureza, y copiar un estado residual nunca transfiere obligaciones sobre un extremo de comunicación, una continuación o un búfer.
 
 ## Verificación
 
-Requiere Go 1.26 o posterior. Ejecute las pruebas del paquete con:
+Requiere Go 1.27 o posterior. Ejecute las pruebas del paquete con:
 
 ```sh
 GOWORK=off go test -timeout 120s -race ./...

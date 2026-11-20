@@ -7,6 +7,7 @@
 package tempo_test
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -82,12 +83,12 @@ func TestLifetimeCorrespondence(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	end := strings.LastIndex(string(module), "\n====")
-	if end < 0 {
+	prefix, _, found := bytes.CutLast(module, []byte("\n===="))
+	if !found {
 		t.Fatal("Lifetime module terminator missing")
 	}
 	var source strings.Builder
-	source.Write(module[:end])
+	source.Write(prefix)
 	source.WriteString("\nGoSpec == Init /\\ [][FALSE]_vars\n")
 	r, l := request{Origin: origin, Deadline: deadline}, loan{}
 	fmt.Fprintf(&source, "GoInitial == request = %s /\\ loan = %s\n", requestRecord(r), loanRecord(l))
